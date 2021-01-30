@@ -1,10 +1,10 @@
 import React from "react";
 import Person from "./Person";
 
-const Persons = ({ persons, deleteHandler }) => {
+const People = ({ people, deleteHandler }) => {
   return (
     <>
-      {persons.map((person) => (
+      {people.map((person) => (
         <div key={person.name}>
           <Person name={person.name} number={person.number} />{" "}
           <button onClick={() => deleteHandler(person)}>Delete</button>
@@ -14,4 +14,4 @@ const Persons = ({ persons, deleteHandler }) => {
   );
 };
 
-export default Persons;
+export default People;

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
-import Persons from "./components/Persons";
-import personService from "./services/PersonService";
+import People from "./components/People";
+import PeopleService from "./services/PeopleService";
 import Notification from "./components/Notification";
 
 const TIMEOUT = 3500;
 
 const App = () => {
   // State
-  const [persons, setPersons] = useState([]);
+  const [people, setPeople] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
@@ -18,16 +18,15 @@ const App = () => {
 
   // Effect Hook
   useEffect(
-    () => personService.getAll().then((persons) => setPersons(persons)),
+    () => PeopleService.getAll().then((people) => setPeople(people)),
     []
   );
 
   const handleDelete = (person) => {
     if (window.confirm(`Delete ${person.name}?`) === true) {
-      personService
-        .remove(person.id)
+      PeopleService.remove(person.id)
         .then(() => {
-          setPersons(persons.filter((p) => p.id !== person.id));
+          setPeople(people.filter((p) => p.id !== person.id));
         })
         .catch(() => {
           setErrorMessage(
@@ -36,29 +35,29 @@ const App = () => {
           setTimeout(() => {
             setErrorMessage(null);
           }, TIMEOUT);
-          setPersons(persons.filter((p) => p.id !== person.id));
+          setPeople(people.filter((p) => p.id !== person.id));
         });
     }
   };
 
-  const personsToShow =
+  const peopleToShow =
     newFilter === ""
-      ? persons
-      : persons.filter((person) =>
+      ? people
+      : people.filter((person) =>
           person.name.toUpperCase().includes(newFilter.toUpperCase())
         );
 
   const addName = (e) => {
     e.preventDefault();
 
-    const personFound = persons.find((p) => p.name === newName);
+    const personFound = people.find((p) => p.name === newName);
 
     if (typeof personFound !== "undefined") {
       updateName(personFound);
     } else {
       const newPerson = { name: newName, number: newNumber };
-      personService.create(newPerson).then((person) => {
-        setPersons(persons.concat(person));
+      PeopleService.create(newPerson).then((person) => {
+        setPeople(people.concat(person));
         setNewName("");
         setNewNumber("");
         setSuccessMessage(`Added ${newName}`);
@@ -77,10 +76,8 @@ const App = () => {
     ) {
       const updatedPerson = { name: person.name, number: newNumber };
 
-      personService.update(person.id, updatedPerson).then((returnedPerson) => {
-        setPersons(
-          persons.map((p) => (p.id !== person.id ? p : returnedPerson))
-        );
+      PeopleService.update(person.id, updatedPerson).then((returnedPerson) => {
+        setPeople(people.map((p) => (p.id !== person.id ? p : returnedPerson)));
         setSuccessMessage(`Updated ${newName}'s number`);
         setTimeout(() => {
           setSuccessMessage(null);
@@ -129,7 +126,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} deleteHandler={handleDelete} />
+      <People people={peopleToShow} deleteHandler={handleDelete} />
     </div>
   );
 };
