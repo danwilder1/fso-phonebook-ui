@@ -14,7 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
   const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  //const [errorMessage, setErrorMessage] = useState(null);
 
   // Effect Hook
   useEffect(
@@ -24,10 +24,10 @@ const App = () => {
 
   const handleDelete = (person) => {
     if (window.confirm(`Delete ${person.name}?`) === true) {
-      PeopleService.remove(person.id)
-        .then(() => {
-          setPeople(people.filter((p) => p.id !== person.id));
-        })
+      PeopleService.remove(person.id).then(() => {
+        setPeople(people.filter((p) => p.id !== person.id));
+      });
+      /* Pre DB:
         .catch(() => {
           setErrorMessage(
             `Information of ${person.name} has already been removed from the server`
@@ -36,7 +36,9 @@ const App = () => {
             setErrorMessage(null);
           }, TIMEOUT);
           setPeople(people.filter((p) => p.id !== person.id));
+          
         });
+        */
     }
   };
 
@@ -109,9 +111,9 @@ const App = () => {
         if (successMessage !== null) {
           return <Notification message={successMessage} type="success" />;
         }
-        if (errorMessage !== null) {
-          return <Notification message={errorMessage} type="error" />;
-        }
+        //if (errorMessage !== null) {
+        //return <Notification message={errorMessage} type="error" />;
+        //}
       })()}
 
       <Filter state={newFilter} onChange={handleFilterChange} />
